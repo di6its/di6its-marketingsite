@@ -1,0 +1,150 @@
+/* Design tokens */
+:root {
+  --bg:        #07091A;
+  --surface:   #0E1228;
+  --surface2:  #161B38;
+  --grape:     #8B5CF6;
+  --grape-mid: #A78BFA;
+  --grape-dim: #7C3AED;
+  --blue1k:    #3B82F6;
+  --papaya:    #FF6B2B;
+  --papaya-dim:#E55B1E;
+  --fg:        #EEF0FF;
+  --fg-muted:  #8891BB;
+  --border:    rgba(255,255,255,0.08);
+  --shadow:    rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:        #FAFAFD;
+    --surface:   #FFFFFF;
+    --surface2:  #F0EDFC;
+    --grape:     #6B3FC4;
+    --grape-mid: #8B5CF6;
+    --grape-dim: #5530A0;
+    --blue1k:    #2563EB;
+    --fg:        #0F0920;
+    --fg-muted:  #6B5E8A;
+    --border:    rgba(107,63,196,0.12);
+    --shadow:    rgba(107,63,196,0.08);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg:        #FAFAFD;
+  --surface:   #FFFFFF;
+  --surface2:  #F0EDFC;
+  --grape:     #6B3FC4;
+  --grape-mid: #8B5CF6;
+  --grape-dim: #5530A0;
+  --blue1k:    #2563EB;
+  --fg:        #0F0920;
+  --fg-muted:  #6B5E8A;
+  --border:    rgba(107,63,196,0.12);
+  --shadow:    rgba(107,63,196,0.08);
+  color-scheme: light;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body, 'DM Sans', system-ui, sans-serif);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+}
+
+/* Safe-area top bar */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 110;
+  background: rgba(7,9,26,0.98);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) body::before { background: rgba(250,250,253,0.98); }
+}
+:root[data-theme="light"] body::before { background: rgba(250,250,253,0.98); }
+
+/* Shared layout */
+.section {
+  padding-block: 5rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.section-tinted { background: var(--surface); }
+.section-alt    { background: var(--surface2); }
+.section-inner  { max-width: 1100px; margin: 0 auto; }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grape-mid);
+  margin-bottom: 0.6rem;
+}
+.section-heading { max-width: 600px; }
+.section-heading h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.5vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.75rem;
+  text-wrap: balance;
+  line-height: 1.12;
+}
+.section-heading p { color: var(--fg-muted); margin: 0; line-height: 1.75; font-size: 1.05rem; }
+
+/* Shared buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.btn-grape  { background: var(--grape); color: #fff; }
+.btn-grape:hover { background: var(--grape-dim); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,0.35); }
+.btn-outline { background: transparent; color: var(--fg); border: 1.5px solid var(--border); }
+.btn-outline:hover { border-color: var(--grape-mid); color: var(--grape-mid); }
+.btn-cta {
+  background: var(--papaya);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.btn-cta:hover { background: var(--papaya-dim); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,107,43,0.35); }
+.btn-blue {
+  background: var(--blue1k);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.btn-blue:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(59,130,246,0.3); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}

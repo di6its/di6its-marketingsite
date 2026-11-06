@@ -1,0 +1,43 @@
+.section {
+  background: var(--grape-dim);
+  text-align: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 5rem;
+}
+.inner { max-width: 600px; margin: 0 auto; }
+.eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 0.6rem; display: inline-block; }
+.section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: #fff;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+.desc { color: rgba(255,255,255,0.72); font-size: 1.05rem; line-height: 1.75; margin: 0 0 2.5rem; }
+.row {
+  display: flex;
+  gap: 0.65rem;
+  max-width: 440px;
+  margin: 0 auto 0.75rem;
+}
+@media (max-width: 500px) { .row { flex-direction: column; } }
+.emailInput {
+  flex: 1; min-width: 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.emailInput::placeholder { color: rgba(255,255,255,0.4); }
+.emailInput:focus { border-color: rgba(255,255,255,0.55); }
+.finePrint { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin: 0; }
+.successNote { font-size: 0.9rem; color: rgba(255,255,255,0.9); font-weight: 600; margin: 0.5rem 0; }
