@@ -1,0 +1,173 @@
+.stage {
+  position: relative;
+  width: min(100%, 25rem);
+  justify-self: center;
+}
+/* Stacked purple layers behind the glass card. */
+.stage::before,
+.stage::after {
+  content: "";
+  position: absolute;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-edge);
+  background: var(--glass-layer);
+  box-shadow: inset 0 1px 0 var(--glass-sheen), 0 0 60px var(--grape-glow);
+}
+.stage::before { inset: -9% 6% 30% 10%; rotate: 7deg; opacity: 0.7; }
+.stage::after  { inset: 36% 16% -7% -7%; rotate: -6deg; }
+
+.card {
+  --ease-climb: cubic-bezier(0.33, 1, 0.68, 1); /* Matches the count-up's cubic ease-out. */
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  margin: 0;
+  padding: 1.75rem;
+  border-radius: var(--radius-card);
+  background: var(--glass-solid);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-sheen), 0 24px 60px var(--shadow);
+  /* 2D only: any 3D transform here silently turns the backdrop blur off in Chromium. */
+  transform: rotate(-2deg) skewY(1deg);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .card {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Soft highlight that follows a mouse; shown only in the hover media query below. */
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 18rem;
+  height: 18rem;
+  background: radial-gradient(closest-side, var(--glass-sheen), transparent);
+  opacity: 0;
+  transform: translate(calc(var(--pointer-x, 0px) - 50%), calc(var(--pointer-y, 0px) - 50%));
+  transition: opacity 250ms ease-out;
+  pointer-events: none;
+}
+
+.title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--glass-muted);
+  margin-bottom: 0.5rem;
+}
+
+.list { margin: 0; }
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--glass-edge);
+}
+/* Hover highlight: more solid glass, so it lifts text contrast in both themes. */
+.row::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 -0.75rem;
+  border-radius: var(--radius-icon);
+  background: var(--glass-solid);
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+/* Pseudo-elements with no text stay out of the accessibility tree. */
+.row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--share);
+  height: 2px;
+  background: var(--bar);
+  opacity: 0.75;
+  transform-origin: left center;
+  transition: opacity 180ms ease-out;
+}
+
+.label {
+  min-width: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--glass-muted);
+}
+.amount {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--fg);
+  transform-origin: right center;
+  transition: transform 180ms ease-out;
+}
+/* Pinned to the real figure's box and anchored right, so digits never push anything. */
+.counter {
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: flex-end;
+}
+
+.neutral { --bar: var(--fg-muted); }
+.blue    { --bar: var(--blue1k); }
+.blue .amount { color: var(--blue-text); }
+/* The top figure is the point of the comparison, so it carries the most weight. */
+.papaya  { --bar: var(--papaya); }
+.papaya .amount { color: var(--papaya-text); font-size: 1.5rem; }
+
+.note {
+  margin: 1rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--glass-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover::before { opacity: 0.6; }
+  .row:hover::after { opacity: 1; }
+  .row:hover .amount { transform: scale(1.06); }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover::before { opacity: 0.5; }
+}
+
+/* The climb. Scoped so print, no-JS and reduced-motion visitors simply see the finished card. */
+@media screen and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  /* `reveal` is the safety net: rows still appear if the JS bundle never arrives. */
+  .card:not([data-reveal]) .row {
+    opacity: 0;
+    animation: reveal 0s 2.5s forwards;
+  }
+  .card[data-reveal="waiting"] .row { opacity: 0; }
+
+  .card[data-reveal="playing"] .row {
+    animation: rowIn 450ms var(--ease-climb) both;
+    animation-delay: calc(var(--index) * var(--stagger));
+  }
+  .card[data-reveal="playing"] .row::after {
+    animation: barIn var(--climb) var(--ease-climb) both;
+    animation-delay: calc(var(--index) * var(--stagger));
+  }
+  .card[data-reveal="playing"] .figure { color: transparent; }
+  .card[data-reveal="playing"] .counter { display: flex; }
+}
+@keyframes reveal { to { opacity: 1; } }
+@keyframes rowIn  { from { opacity: 0; transform: translateY(0.5rem); } }
+@keyframes barIn  { from { transform: scaleX(0); } }

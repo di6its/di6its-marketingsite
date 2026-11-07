@@ -1,7 +1,7 @@
 import { LangProvider } from "@/contexts/LangContext";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import TrustStrip from "@/components/TrustStrip";
+import FeatureStrip from "@/components/FeatureStrip";
 import ForWho from "@/components/ForWho";
 import Story from "@/components/Story";
 import Courses from "@/components/Courses";
@@ -20,7 +20,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <TrustStrip />
+        <FeatureStrip />
         <ForWho />
         <Story />
         <Courses />

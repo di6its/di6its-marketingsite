@@ -1,0 +1,13 @@
+/* Scoped to screen so printing never loses content. Elements set their order with --reveal-step. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .scope [data-reveal="hidden"] { opacity: 0; }
+  /* `backwards` only: a held end state would override the elements' own hover transforms. */
+  .scope [data-reveal="shown"] {
+    animation: rise var(--motion-reveal) var(--ease-out) backwards;
+    animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger));
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(1.25rem); }
+}

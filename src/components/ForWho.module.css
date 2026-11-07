@@ -1,23 +1,111 @@
+.section {
+  /* Sits above FeatureStrip's soft shadow, which would haze over the crisp top edge. */
+  position: relative;
+  z-index: 2;
+  /* Clears the sticky nav when the "Who this is for" links land here. */
+  scroll-margin-top: 2.5rem;
+  padding-block: clamp(3rem, 5vw, 3.6rem) calc(var(--panel-gap) / 2);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  /* Top edge fades out of the band; the flare sits just above the target, wherever it lands. */
+  background:
+    linear-gradient(var(--grape-dim), transparent) top / 100% 5px no-repeat,
+    radial-gradient(12rem 6.5rem at calc(50% + min(25.5rem, 32vw)) 0, var(--grape-flare), transparent),
+    var(--panel-bg);
+}
+
+.intro {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (min-width: 768px) {
+  .intro { grid-template-columns: minmax(0, 1fr) minmax(0, 39%); gap: 2rem; }
+}
+
+.heading :global(.eyebrow) {
+  display: block;
+  margin: 0 0 0.35rem;
+  color: var(--fg);
+  font-weight: 800;
+}
+.heading > :nth-child(2) { --reveal-step: 1; }
+.heading > :nth-child(3) { --reveal-step: 2; }
+.heading h2 {
+  max-width: 11.5em;
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.1vw, 3.25rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.heading > p:last-child {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--glass-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  gap: 1.4rem;
-  margin-top: 3rem;
+  gap: clamp(1rem, 3vw, 2.25rem);
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
 }
+@media (min-width: 768px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 2.5rem; }
+}
+
 .card {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 2rem;
-  transition: box-shadow 0.2s, transform 0.2s;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-panel);
+  background: var(--panel-card);
+  border: 1px solid var(--grape-tint);
+  transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
 }
-.card:hover { box-shadow: 0 10px 32px var(--shadow); transform: translateY(-3px); }
-.emoji { font-size: 2.2rem; display: block; margin-bottom: 1rem; line-height: 1; }
+.card:nth-child(2) { --reveal-step: 1; }
+.card:nth-child(3) { --reveal-step: 2; }
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--grape-line);
+    box-shadow: 0 0 0 1px var(--grape-tint), 0 18px 44px -14px var(--grape-glow);
+  }
+  .card:hover .tile { box-shadow: 0 0 28px var(--grape-glow); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: translateY(-4px); }
+  .card:hover .tile { transform: scale(1.08) rotate(-5deg); }
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.9rem;
+  border-radius: var(--radius-icon);
+  background: var(--grape-deep);
+  color: var(--on-accent);
+  box-shadow: 0 0 20px var(--grape-glow);
+  transition: transform 220ms var(--ease-back), box-shadow 220ms var(--ease-out);
+}
+.icon { width: 1.75rem; height: 1.75rem; fill: currentColor; }
+
 .card h3 {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 800;
   margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
-.card p { font-size: 0.9rem; color: var(--fg-muted); margin: 0; line-height: 1.7; }
+.card p {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}

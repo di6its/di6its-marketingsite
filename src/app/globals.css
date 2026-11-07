@@ -13,6 +13,85 @@
   --fg-muted:  #8891BB;
   --border:    rgba(255,255,255,0.08);
   --shadow:    rgba(0,0,0,0.5);
+  /* Accent for small text: --grape-mid fails AA on the light background. */
+  --grape-text: var(--grape-mid);
+  --grape-tint: rgba(139,92,246,0.14);
+  --grape-line: rgba(167,139,250,0.28);
+  --grape-glow: rgba(139,92,246,0.4);
+  --blue-glow:  rgba(59,130,246,0.12);
+  --glass:       rgba(14,18,40,0.62);
+  /* Used where backdrop-filter is unsupported, when --glass alone is too thin for text. */
+  --glass-solid: rgba(14,18,40,0.92);
+  --glass-edge:  rgba(255,255,255,0.16);
+  --glass-sheen: rgba(255,255,255,0.14);
+  /* Secondary text on glass: --fg-muted drops below AA over the purple layers. */
+  --glass-muted: #B4BAE0;
+  /* Text shades of --blue1k / --papaya, tuned for AA on glass over the purple layers. */
+  --blue-text:   color-mix(in srgb, var(--blue1k), white 50%);
+  --papaya-text: var(--papaya);
+  --glass-layer: linear-gradient(150deg, var(--grape), var(--grape-dim) 45%, var(--grape-tint));
+  --on-accent:  #FFFFFF;
+  /* The stops sit past the ends so white labels stay AA across the text span. */
+  --grad-brand: linear-gradient(135deg, var(--grape-dim) 20%, var(--grape) 110%);
+  /* Full-bleed band: peaks at a 50/50 mix, not pure --grape, so white text stays AA (>= 4.9:1) edge to edge. */
+  --grad-band: linear-gradient(90deg, var(--grape-dim), color-mix(in srgb, var(--grape-dim) 50%, var(--grape)) 50%, var(--grape-dim));
+  /* Overlays for grape surfaces; theme-independent because those surfaces stay dark in both themes. */
+  --on-accent-tint: rgba(255,255,255,0.12);
+  --on-accent-line: rgba(255,255,255,0.22);
+  /* Dark purple fill for white labels and icons; stays dark in both themes. */
+  --grape-deep: #3D2A8C;
+  /* The continuous ForWho + Story panel: a bluer base than --bg, with its own card fills. */
+  --panel-bg:     #080922;
+  --panel-card:   #101134;
+  --panel-raised: #13113F;
+  --panel-sunken: #0A0A24;
+  --panel-gap:    clamp(5rem, 10vw, 7.5rem);
+  /* Bluer than --grape-glow, so glows stay saturated on the navy base. */
+  --grape-wash:  rgba(72,20,230,0.27);
+  --grape-flare: rgba(72,20,230,0.46);
+  --grad-progress: linear-gradient(90deg, var(--grape-dim), color-mix(in srgb, var(--grape-dim) 55%, var(--blue1k)));
+  --grad-bar-neutral: linear-gradient(90deg, var(--fg-muted), color-mix(in srgb, var(--fg-muted) 60%, transparent));
+  --grad-bar-blue: linear-gradient(90deg, var(--blue1k), color-mix(in srgb, var(--blue1k), white 25%));
+  /* The target illustration is a painted object, so its palette ignores the theme. */
+  --illo-rim-hi:  #8A4FF0;
+  --illo-rim:     #6F30E8;
+  --illo-rim-lo:  #4A1CB8;
+  --illo-edge:    #2C128C;
+  --illo-face:    #FFFFFF;
+  --illo-mist:    #D6CEF4;
+  --illo-feather: #BBA6F8;
+  --illo-tile-hi: #26147A;
+  --illo-tile-lo: #110A40;
+  --illo-tile-ink:#5B36D8;
+  --illo-stack-hi:#3B25A0;
+  --illo-stack-lo:#190D54;
+  /* The Courses laptop and its floating tiles: also painted objects. */
+  --illo-lid:       #15113E;
+  --illo-lid-rim:   #34227E;
+  --illo-metal-hi:  #4E4796;
+  --illo-metal-lo:  #2E2A68;
+  --illo-metal-lip: #1B1A4A;
+  --illo-metal-edge:#7A72C8;
+  --illo-key:       #0B0D24;
+  --illo-screen-hi: #4A2CC0;
+  --illo-screen-lo: #0A0B23;
+  --illo-word:      #9A5CF2;
+  --illo-word-glow: rgba(139,92,246,0.6);
+  --illo-chip-hi:   #5850DE;
+  --illo-chip-lo:   #2A1A88;
+  --illo-chip-shade:rgba(10,6,40,0.35);
+  /* The haze around the laptop: vivid on navy, softened for the light theme. */
+  --illo-cloud-hi:  rgba(104,50,226,0.9);
+  --illo-cloud:     rgba(76,36,190,0.7);
+  --radius-card: 20px;
+  --radius-panel: 16px;
+  --radius-icon: 10px;
+  --radius-pill: 999px;
+  --ease-out:  cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-reveal:  640ms;
+  --motion-stagger: 90ms;
+  --motion-bar:     1100ms;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
@@ -28,6 +107,26 @@
     --fg-muted:  #6B5E8A;
     --border:    rgba(107,63,196,0.12);
     --shadow:    rgba(107,63,196,0.08);
+    --grape-text: var(--grape);
+    --grape-tint: rgba(107,63,196,0.09);
+    --grape-line: rgba(107,63,196,0.24);
+    --grape-glow: rgba(107,63,196,0.24);
+    --blue-glow:  rgba(37,99,235,0.07);
+    --glass:       rgba(255,255,255,0.68);
+    --glass-solid: rgba(255,255,255,0.94);
+    --glass-edge:  rgba(107,63,196,0.2);
+    --glass-sheen: rgba(255,255,255,0.85);
+    --glass-muted: #4F4369;
+    --blue-text:   color-mix(in srgb, var(--blue1k), black 30%);
+    --papaya-text: color-mix(in srgb, var(--papaya), black 35%);
+    --panel-bg:     var(--bg);
+    --panel-card:   color-mix(in srgb, var(--surface), var(--blue1k) 4%);
+    --panel-raised: var(--surface);
+    --panel-sunken: var(--surface2);
+    --grape-wash:  rgba(107,63,196,0.14);
+    --grape-flare: rgba(107,63,196,0.2);
+    --illo-cloud-hi: rgba(139,92,246,0.42);
+    --illo-cloud:    rgba(139,92,246,0.26);
     color-scheme: light;
   }
 }
@@ -43,6 +142,26 @@
   --fg-muted:  #6B5E8A;
   --border:    rgba(107,63,196,0.12);
   --shadow:    rgba(107,63,196,0.08);
+  --grape-text: var(--grape);
+  --grape-tint: rgba(107,63,196,0.09);
+  --grape-line: rgba(107,63,196,0.24);
+  --grape-glow: rgba(107,63,196,0.24);
+  --blue-glow:  rgba(37,99,235,0.07);
+  --glass:       rgba(255,255,255,0.68);
+  --glass-solid: rgba(255,255,255,0.94);
+  --glass-edge:  rgba(107,63,196,0.2);
+  --glass-sheen: rgba(255,255,255,0.85);
+  --glass-muted: #4F4369;
+  --blue-text:   color-mix(in srgb, var(--blue1k), black 30%);
+  --papaya-text: color-mix(in srgb, var(--papaya), black 35%);
+  --panel-bg:     var(--bg);
+  --panel-card:   color-mix(in srgb, var(--surface), var(--blue1k) 4%);
+  --panel-raised: var(--surface);
+  --panel-sunken: var(--surface2);
+  --grape-wash:  rgba(107,63,196,0.14);
+  --grape-flare: rgba(107,63,196,0.2);
+  --illo-cloud-hi: rgba(139,92,246,0.42);
+  --illo-cloud:    rgba(139,92,246,0.26);
   color-scheme: light;
 }
 :root[data-theme="dark"] { color-scheme: dark; }
@@ -143,6 +262,32 @@ body::before {
   white-space: nowrap;
 }
 .btn-blue:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(59,130,246,0.3); }
+.btn-gradient {
+  background: var(--grad-brand);
+  color: var(--on-accent);
+  box-shadow: 0 8px 24px var(--grape-glow);
+}
+.btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 12px 32px var(--grape-glow); }
+/* Size and shape modifier; combine with a colour variant. */
+.btn-pill {
+  min-height: 3rem;
+  padding: 0.5rem 1.6rem;
+  border-radius: var(--radius-pill);
+  border-color: var(--grape-line);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.btn-pill:active { transform: translateY(0); }
+.btn-pill:focus-visible { outline: 2px solid var(--grape-text); outline-offset: 3px; }
+/* For CTAs that sit on a grape band, where the gradient button would vanish. */
+.btn-light {
+  background: var(--on-accent);
+  color: var(--grape-deep);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+.btn-light:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--shadow); }
+.btn-light:focus-visible { outline-color: var(--on-accent); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

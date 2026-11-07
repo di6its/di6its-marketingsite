@@ -1,0 +1,46 @@
+.controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* A dark glass circle; 2.75rem keeps it a 44px touch target. */
+.button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--grape-line);
+  background: var(--panel-raised);
+  color: var(--fg);
+  cursor: pointer;
+  transition: transform 180ms var(--ease-out), border-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out), opacity 180ms var(--ease-out);
+}
+.button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flip { rotate: 180deg; }
+
+.button:focus-visible {
+  outline: 2px solid var(--grape-text);
+  outline-offset: 3px;
+}
+@media (hover: hover) {
+  .button:not([aria-disabled="true"]):hover {
+    border-color: var(--grape-mid);
+    box-shadow: 0 0 20px var(--grape-glow);
+  }
+}
+.button:not([aria-disabled="true"]):active { transform: scale(0.94); }
+
+.button[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}

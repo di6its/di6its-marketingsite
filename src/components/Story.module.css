@@ -1,39 +1,71 @@
+.section {
+  padding-block: calc(var(--panel-gap) / 2) clamp(3rem, 5vw, 4rem);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  /* Layers, top down: the bottom-right arc, the bottom-left glow, the base Courses continues. */
+  background:
+    radial-gradient(
+      circle 13rem at calc(100% + 3.5rem) calc(100% + 5.5rem),
+      color-mix(in srgb, var(--grape-wash) 18%, transparent) 99%,
+      color-mix(in srgb, var(--grape-tint) 60%, transparent) 99.4%,
+      transparent 100%
+    ),
+    radial-gradient(26rem 19rem at 0 calc(100% - 3rem), var(--grape-wash), transparent),
+    var(--panel-bg);
+}
+
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+  gap: 2.5rem;
 }
-@media (max-width: 720px) { .grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+@media (min-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 50%) minmax(0, 1fr); gap: 4.4rem; }
+  .text { padding-top: 0.5rem; }
+}
 
-.barChart {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2rem;
+.text > :nth-child(2) { --reveal-step: 1; }
+.text > :nth-child(3) { --reveal-step: 2; }
+.text > :nth-child(4) { --reveal-step: 3; }
+
+.badge {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--grape-deep) 80%, var(--grape-dim));
+  color: var(--on-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
-.chartHeading { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 1.75rem; }
-.row { margin-bottom: 1.4rem; }
-.row:last-of-type { margin-bottom: 0; }
-.rowLabel { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; font-size: 0.84rem; }
-.rowLabel span { color: var(--fg-muted); }
-.rowLabelHighlight span { color: var(--grape-mid); }
-.rowLabelHighlight strong { color: var(--grape-mid); }
-.track { height: 10px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
-.fill { height: 100%; border-radius: 100px; }
-.fillA { background: var(--fg-muted); width: 18%; opacity: 0.4; }
-.fillB { background: var(--blue1k); width: 25%; }
-.fillC { background: var(--grape); width: 100%; }
-.chartNote { font-size: 0.76rem; color: var(--fg-muted); margin: 1.25rem 0 0; line-height: 1.5; }
 
 .text h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
   margin: 0 0 1rem;
-  text-wrap: balance;
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
-.text p { color: var(--fg-muted); margin: 0 0 1rem; line-height: 1.8; }
-.text p:last-of-type { margin-bottom: 1.75rem; }
+.line { display: block; text-wrap: balance; }
+
+.text > p:not(.badge) {
+  max-width: 30rem;
+  margin: 0 0 1.5rem;
+  color: var(--glass-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Closer to the reference's compact CTA, while staying a 44px touch target. */
+.text .cta {
+  min-height: 2.75rem;
+  padding-inline: 1.5rem;
+  font-size: 0.875rem;
+}
+.text .cta:active { transform: scale(0.98); }
+
+.arrow { transition: transform 180ms var(--ease-out); }
+.cta:hover .arrow { transform: translateX(4px); }
+.cta:active .arrow { transform: translateX(1px); }

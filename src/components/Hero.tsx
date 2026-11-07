@@ -1,15 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { T } from "@/contexts/LangContext";
+import IncomeComparison from "./IncomeComparison";
 import styles from "./Hero.module.css";
+
+const AVATARS = ["jm", "rc", "al", "kd"];
 
 export default function Hero() {
   return (
     <section className={styles.hero}>
-      <div className={styles.blobs} aria-hidden>
-        <div className={`${styles.blob} ${styles.blob1}`} />
-        <div className={`${styles.blob} ${styles.blob2}`} />
-      </div>
       <div className={styles.inner}>
         <div>
           <div className={styles.pill}>
@@ -23,22 +23,29 @@ export default function Hero() {
             <span className={styles.h1Grape}><T en="6 digits." tl="6 digits." /></span>
           </h1>
           <p className={styles.sub}>
+            <strong><T en="You were not born to just get by." tl="Hindi ka nabuhay para mabuhay lang." /></strong>{" "}
             <T
-              en="You were not born to just get by. You were born to travel, experience the world, and choose where you live and work. di6its teaches any Filipino how to earn 6 digits a month through remote work, the income that makes that life possible."
-              tl="Hindi ka nabuhay para mabuhay lang. Nabuhay ka para mabuhay nang buo — maglakbay, maranasan, pumili kung saan ka gusto manirahan. Itinuturo ng di6its kung paano kumita ng 6 digits sa isang buwan sa pamamagitan ng remote work, para sa kahit sinong Pilipino."
+              en="You were born to travel, experience the world, and choose where you live and work. di6its teaches any Filipino how to earn 6 digits a month through remote work, the income that makes that life possible."
+              tl="Nabuhay ka para mabuhay nang buo — maglakbay, maranasan, pumili kung saan ka gusto manirahan. Itinuturo ng di6its kung paano kumita ng 6 digits sa isang buwan sa pamamagitan ng remote work, para sa kahit sinong Pilipino."
             />
           </p>
           <div className={styles.actions}>
-            <a href="#enroll" className="btn btn-cta">
+            <a href="#enroll" className="btn btn-gradient btn-pill">
               <T en="Start the 30-Day Playbook →" tl="Simulan ang 30-Day Playbook →" />
             </a>
-            <a href="#for-who" className="btn btn-outline">
+            <a href="#for-who" className="btn btn-outline btn-pill">
+              <svg className={styles.playIcon} viewBox="0 0 12 12" aria-hidden>
+                <path d="M2.5 1.2v9.6L10.5 6z" />
+              </svg>
               <T en="Is this for me?" tl="Para ba ito sa akin?" />
             </a>
           </div>
           <div className={styles.proof}>
-            <div className={styles.avatars}>
-              <span>JM</span><span>RC</span><span>AL</span><span>KD</span><span>+</span>
+            <div className={styles.avatars} aria-hidden>
+              {AVATARS.map((id) => (
+                <Image key={id} src={`/images/hero/avatar-${id}.webp`} alt="" width={36} height={36} />
+              ))}
+              <span>+</span>
             </div>
             <p className={styles.proofLabel}>
               <strong><T en="Waitlist is open." tl="Bukas ang waitlist." /></strong>{" "}
@@ -46,31 +53,7 @@ export default function Hero() {
             </p>
           </div>
         </div>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}><T en="Monthly income comparison" tl="Paghahambing ng buwanang kita" /></div>
-          <div className={styles.incomeRow}>
-            <span className={styles.incomeLabel}><T en="Traditional office job" tl="Tradisyonal na trabaho" /></span>
-            <span className={styles.incomeAmt}>&#8369;18,000</span>
-          </div>
-          <div className={styles.incomeRow}>
-            <span className={styles.incomeLabel}>BPO / call center</span>
-            <span className={styles.incomeAmt}>&#8369;25,000</span>
-          </div>
-          <div className={styles.incomeRow}>
-            <span className={styles.incomeLabel}><T en="Freelance online" tl="Freelance online" /></span>
-            <span className={`${styles.incomeAmt} ${styles.amtBlue}`}>&#8369;60,000+</span>
-          </div>
-          <div className={styles.incomeRow}>
-            <span className={styles.incomeLabel}><T en="Remote (foreign company)" tl="Remote (dayuhang kumpanya)" /></span>
-            <span className={`${styles.incomeAmt} ${styles.amtPapaya}`}>&#8369;100,000+</span>
-          </div>
-          <p className={styles.cardFooter}>
-            <T
-              en="Typical market rates for remote roles in customer service, QA, and development."
-              tl="Batay sa karaniwang rate para sa remote na trabaho sa customer service, QA, at development."
-            />
-          </p>
-        </div>
+        <IncomeComparison />
       </div>
     </section>
   );

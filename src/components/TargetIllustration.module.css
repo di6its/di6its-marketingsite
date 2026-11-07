@@ -1,0 +1,112 @@
+.stage {
+  /* Lets tiles size themselves in cqw, so the whole scene scales with its column. */
+  container-type: inline-size;
+  position: relative;
+  width: min(100%, 27rem);
+  aspect-ratio: 395 / 230;
+  justify-self: center;
+  /* Dust specks and the faint pool of light behind the board. */
+  background:
+    radial-gradient(1.5px circle at 8% 12%, var(--grape-mid), transparent),
+    radial-gradient(1.5px circle at 94% 42%, var(--grape-mid), transparent),
+    radial-gradient(1.5px circle at -6% 62%, var(--grape-mid), transparent),
+    radial-gradient(1px circle at 40% 96%, var(--grape-mid), transparent),
+    radial-gradient(1px circle at 66% 90%, var(--grape-mid), transparent),
+    radial-gradient(1px circle at 12% 4%, var(--grape-mid), transparent),
+    radial-gradient(1px circle at 72% 8%, var(--grape-mid), transparent),
+    radial-gradient(closest-side, var(--grape-tint), transparent);
+  background-size: auto, auto, auto, auto, auto, auto, auto, 70% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 55% 40%;
+  background-repeat: no-repeat;
+}
+/* The scene overhangs its row on both sides, so it never pushes the cards down. */
+@media (min-width: 768px) {
+  .stage { width: 100%; margin-block: -1.25rem -2.5rem; }
+}
+/* Once the gutter has room, it also hangs past the content edge. */
+@media (min-width: 1180px) {
+  .stage { translate: 1rem 0; }
+}
+
+.target {
+  position: absolute;
+  left: 26.4%;
+  top: -4%;
+  width: 57%;
+  height: auto;
+  filter: drop-shadow(0 1cqw 2cqw var(--illo-edge));
+  /* The board drifts against the tiles, which is what makes the depth read. */
+  transform: translate(calc(var(--pointer-x, 0) * -0.8cqw), calc(var(--pointer-y, 0) * -0.8cqw));
+  transition: transform 400ms var(--ease-out);
+}
+.shaftShadow { fill: var(--illo-edge); opacity: 0.35; }
+
+.board { transform-box: fill-box; transform-origin: center; }
+/* Both pivot on the tip, so the arrow reads as stuck in the board. */
+.arrow,
+.arrowHover { transform-box: view-box; transform-origin: 102px 114px; }
+
+.tile {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 22%;
+  background: linear-gradient(145deg, var(--illo-tile-hi), var(--illo-tile-lo));
+  box-shadow: 0 0 4cqw var(--grape-tint);
+  color: var(--illo-tile-ink);
+  rotate: var(--tilt);
+  /* Float, parallax and entrance each own a separate property, so they stack without clashing. */
+  transform: translate(calc(var(--pointer-x, 0) * var(--depth) * 1cqw), calc(var(--pointer-y, 0) * var(--depth) * 1cqw));
+  transition: transform 400ms var(--ease-out);
+  animation: float 6s ease-in-out var(--delay) infinite;
+}
+.tile svg { width: 52%; fill: currentColor; }
+
+@keyframes float {
+  50% { translate: 0 -5%; }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* Choreography: the board arrives, the tiles pop in around it, then the arrow lands and shakes. */
+  .stage[data-reveal="shown"] .board {
+    animation: boardIn 600ms var(--ease-back) backwards, boardHit 260ms var(--ease-out) 1020ms;
+  }
+  .stage[data-reveal="shown"] .tile {
+    animation:
+      tileIn 520ms var(--ease-back) calc(240ms + var(--index) * var(--motion-stagger)) backwards,
+      float 6s ease-in-out var(--delay) infinite;
+  }
+  .stage[data-reveal="shown"] .arrow {
+    animation:
+      arrowLand 420ms ease-in 620ms backwards,
+      arrowQuiver 620ms var(--ease-out) 1040ms;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .stage:hover .arrowHover { animation: arrowQuiver 620ms var(--ease-out); }
+}
+
+@keyframes boardIn {
+  from { opacity: 0; transform: scale(0.82); }
+}
+@keyframes boardHit {
+  35% { transform: scale(0.975) translate(-1px, 1px); }
+}
+@keyframes tileIn {
+  from { opacity: 0; scale: 0.5; }
+}
+/* Travels along the shaft's angle, in viewBox units. */
+@keyframes arrowLand {
+  from { opacity: 0; transform: translate(92px, -60px); }
+  30%  { opacity: 1; }
+}
+@keyframes arrowQuiver {
+  20% { transform: rotate(2.2deg); }
+  45% { transform: rotate(-1.5deg); }
+  70% { transform: rotate(0.8deg); }
+}

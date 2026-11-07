@@ -1,0 +1,92 @@
+.band {
+  /* One loop shifts the track by half its width (COPIES / 2 groups, ~3300px): ~60px/s. */
+  --marquee-duration: 54s;
+  --marquee-fade: clamp(24px, 8vw, 120px);
+
+  position: relative;
+  z-index: 1;
+  background: var(--grad-band);
+  color: var(--on-accent);
+  /* Hairline top highlight plus a soft glow that lifts the band off the next section. */
+  box-shadow:
+    inset 0 1px 0 var(--on-accent-line),
+    0 16px 40px -16px var(--grape-glow);
+}
+
+.viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--marquee-fade),
+    black calc(100% - var(--marquee-fade)),
+    transparent
+  );
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+@media (hover: hover) {
+  .viewport:hover .track { animation-play-state: paused; }
+}
+
+.list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Spacing lives on every item, so the seam between copies matches the gap between items. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  white-space: nowrap;
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-icon);
+  background: var(--on-accent-tint);
+  border: 1px solid var(--on-accent-line);
+}
+.icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Static fallback: the real list once, centred and wrapping, with nothing clipped or faded. */
+@media (prefers-reduced-motion: reduce) {
+  .viewport { mask-image: none; }
+  .track { display: block; width: auto; animation: none; }
+  .list { flex-wrap: wrap; justify-content: center; padding-block: 0.5rem; }
+  .list[aria-hidden] { display: none; }
+  .item { padding: 0.75rem 1rem; white-space: normal; }
+}

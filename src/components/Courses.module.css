@@ -1,26 +1,181 @@
-.grid {
+.section {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 4.5rem);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  /* Where the laptop sits: under the heading on mobile, in the right column from 768px. */
+  --glow-x: 50%;
+  --glow-y: 24rem;
+  /* Continues Story's panel: its bottom-left glow and bottom-right arc carry on across the top edge, at the
+     same page coordinates. A violet haze pools behind the laptop and bleeds right and down, staying clear of
+     both edges, so the flat base meets Playbook's without a seam. */
+  background:
+    radial-gradient(
+      circle 13rem at calc(100% + 3.5rem) 5.5rem,
+      color-mix(in srgb, var(--grape-wash) 18%, transparent) 99%,
+      color-mix(in srgb, var(--grape-tint) 60%, transparent) 99.4%,
+      transparent 100%
+    ),
+    radial-gradient(26rem 19rem at 0 -3rem, var(--grape-wash), transparent),
+    radial-gradient(32rem min(13rem, var(--glow-y)) at calc(var(--glow-x) + 2rem) var(--glow-y), var(--grape-flare), transparent),
+    radial-gradient(60rem min(24rem, var(--glow-y)) at calc(var(--glow-x) + 8rem) calc(var(--glow-y) + 2rem), var(--grape-wash), transparent),
+    var(--panel-bg);
+  overflow-x: clip;
+}
+@media (min-width: 768px) {
+  .section { --glow-x: calc(50% + min(25rem, 26vw)); --glow-y: 11rem; }
+}
+
+.intro {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.4rem;
-  margin-top: 3rem;
+  gap: 2rem;
+  align-items: start;
 }
-.pillar {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.75rem;
-  transition: box-shadow 0.2s, transform 0.2s;
+@media (min-width: 768px) {
+  .intro { grid-template-columns: minmax(0, 1fr) minmax(0, 48%); }
 }
-.pillar:hover { box-shadow: 0 8px 28px var(--shadow); transform: translateY(-3px); }
-.icon {
-  width: 48px; height: 48px;
-  border-radius: 12px;
-  background: rgba(139,92,246,0.12);
+
+.heading :global(.eyebrow) {
+  display: block;
+  margin: 0 0 0.5rem;
+  color: var(--fg);
+  font-weight: 800;
+}
+.heading > :nth-child(2) { --reveal-step: 1; }
+.heading > :nth-child(3) { --reveal-step: 2; }
+.heading h2 {
+  max-width: 10em;
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.heading > p:last-child {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--glass-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.grid {
+  /* Positioned, so the cards paint over the laptop's haze where the two overlap. */
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+}
+@media (min-width: 1024px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2.25rem; }
+}
+
+.card {
+  /* Shares the grid's row tracks (top, title, copy, chips), so each part lines up across a row of cards even when copy or chips wrap differently. */
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  padding: 1.375rem 1.375rem 1.25rem;
+  border-radius: var(--radius-panel);
+  background: linear-gradient(150deg, var(--panel-raised), var(--panel-card) 60%);
+  border: 1px solid var(--grape-tint);
+  transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.card:nth-child(2) { --reveal-step: 1; }
+.card:nth-child(3) { --reveal-step: 2; }
+.card:nth-child(4) { --reveal-step: 3; }
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--grape-line);
+    box-shadow: 0 0 0 1px var(--grape-tint), 0 18px 44px -14px var(--grape-glow);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: translateY(-4px); }
+}
+
+.cardTop {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  margin-bottom: 1.1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
 }
-.pillar h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin: 0 0 0.5rem; }
-.pillar p  { font-size: 0.88rem; color: var(--fg-muted); margin: 0; line-height: 1.65; }
+
+.badge {
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
+  background: var(--grape-tint);
+  box-shadow: inset 0 0 0 1px var(--grape-line);
+  color: var(--grape-text);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-icon);
+  background: var(--grape-deep);
+  box-shadow: inset 0 1px 0 var(--on-accent-tint), 0 0 18px var(--grape-glow);
+  color: var(--on-accent);
+}
+.tile svg {
+  width: 1.3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.card p {
+  margin: 0 0 1.25rem;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-content: flex-start;
+  margin: 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--grape-tint);
+  list-style: none;
+}
+.tools li {
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-pill);
+  background: var(--grape-tint);
+  color: var(--glass-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.4;
+}

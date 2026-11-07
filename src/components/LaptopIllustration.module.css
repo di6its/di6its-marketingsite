@@ -1,0 +1,106 @@
+.stage {
+  /* Lets the tiles size themselves in cqw, so the whole scene scales with its column. */
+  container-type: inline-size;
+  position: relative;
+  width: min(100%, 28rem);
+  aspect-ratio: 1460 / 660;
+  justify-self: center;
+}
+/* The violet cloud bank the laptop sits in: billows under the deck's left, a column rising behind its
+   right edge, and a wider haze around both. Painted first, so it stays behind everything. */
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(5% 11% at 30% 51%, var(--illo-cloud-hi) 60%, transparent),
+    radial-gradient(6.5% 14% at 23% 55%, var(--illo-cloud-hi) 60%, transparent),
+    radial-gradient(7% 15% at 14% 62%, var(--illo-cloud) 60%, transparent),
+    radial-gradient(9% 16% at 7% 73%, var(--illo-cloud) 55%, transparent),
+    radial-gradient(14% 17% at 21% 80%, var(--illo-cloud) 55%, transparent),
+    radial-gradient(6% 32% at 77% 46%, var(--illo-cloud) 25%, transparent),
+    radial-gradient(10% 20% at 85% 84%, var(--illo-cloud) 30%, transparent),
+    radial-gradient(22% 40% at 84% 56%, var(--grape-wash), transparent),
+    radial-gradient(40% 50% at 46% 50%, var(--grape-wash), transparent);
+  filter: blur(0.8cqw);
+}
+
+.laptop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  overflow: visible;
+}
+.lid {
+  fill: var(--illo-lid);
+  stroke: var(--illo-lid-rim);
+  stroke-width: 10;
+  stroke-linejoin: round;
+}
+.screenHi { stop-color: var(--illo-screen-hi); }
+.screenMid { stop-color: var(--illo-screen-hi); stop-opacity: 0.35; }
+.screenLo { stop-color: var(--illo-screen-lo); }
+.metalHi { stop-color: var(--illo-metal-hi); }
+.metalLo { stop-color: var(--illo-metal-lo); }
+.lip { fill: var(--illo-metal-lip); }
+.keys { fill: var(--illo-key); }
+.pad { fill: var(--illo-metal-lo); }
+/* The light catching the deck's front edges. */
+.edge {
+  fill: none;
+  stroke: var(--illo-metal-edge);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 132px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-anchor: middle;
+  fill: var(--illo-word);
+  filter: drop-shadow(0 0 14px var(--illo-word-glow));
+}
+.accent { fill: var(--illo-mist); }
+
+.tile {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 24%;
+  background: linear-gradient(145deg, var(--illo-chip-hi), var(--illo-chip-lo));
+  box-shadow:
+    inset 0 0.25cqw 0 var(--on-accent-line),
+    inset 0 -0.6cqw 1.2cqw var(--illo-chip-shade),
+    0 0 5cqw var(--grape-glow),
+    0 1.6cqw 3cqw var(--shadow);
+  color: var(--on-accent);
+}
+.tile svg { width: 54%; }
+.solid { fill: currentColor; }
+.line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.solid + .line { stroke: var(--illo-chip-lo); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* `translate` is its own property, so the float never fights the reveal's transform. */
+  .tile { animation: float 6s ease-in-out var(--delay) infinite; }
+}
+@keyframes float {
+  50% { translate: 0 -7%; }
+}
+
+/* The scene overhangs its row, so it never pushes the cards down. */
+@media (min-width: 768px) {
+  .stage { width: 112%; margin-block: -1.5rem -2rem; }
+}

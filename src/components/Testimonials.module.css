@@ -1,30 +1,195 @@
-.grid {
+.section {
+  /* How far the track reaches past the content edge so card shadows and the mobile peek aren't
+     cut short. Must stay within the 16px minimum page gutter, or the page would scroll sideways. */
+  --bleed: 1rem;
+  /* Room inside the scroller for the hover lift above and the card shadow below. */
+  --lift-room: 0.5rem;
+  --shadow-room: 1.5rem;
+  padding-block: clamp(3rem, 6vw, 4.5rem);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  /* Continues Playbook's navy, with a faint violet pool behind the cards. */
+  background:
+    radial-gradient(44rem 18rem at 50% 78%, color-mix(in srgb, var(--grape-wash) 55%, transparent), transparent 70%),
+    var(--panel-bg);
+}
+
+/* ---------- Header: copy left, arrows right and centred on the heading ---------- */
+
+.header {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  gap: 1.4rem;
-  margin-top: 3rem;
+  grid-template-areas: "eyebrow" "title" "lede" "arrows";
 }
-.card {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.75rem;
+@media (min-width: 768px) {
+  .header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "eyebrow ." "title arrows" "lede .";
+    column-gap: 2rem;
+  }
 }
-.stars { color: #F5B731; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 0.9rem; }
-.card blockquote { margin: 0 0 1.25rem; font-size: 0.92rem; color: var(--fg); line-height: 1.7; font-style: italic; }
-.author { display: flex; align-items: center; gap: 0.75rem; }
-.avatar {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: rgba(139,92,246,0.12);
-  color: var(--grape-mid);
-  font-family: var(--font-display);
+
+.eyebrow {
+  grid-area: eyebrow;
+  display: block;
+  margin: 0 0 0.5rem;
+  color: var(--fg);
   font-weight: 800;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
-.name { font-weight: 600; font-size: 0.88rem; line-height: 1; margin-bottom: 0.2rem; }
-.role { font-size: 0.78rem; color: var(--fg-muted); }
+
+.title {
+  grid-area: title;
+  --reveal-step: 1;
+  /* Two balanced lines, as in the reference. */
+  max-width: 13em;
+  margin: 0 0 0.875rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.lede {
+  grid-area: lede;
+  --reveal-step: 2;
+  max-width: 30rem;
+  margin: 0;
+  color: var(--glass-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.arrows {
+  grid-area: arrows;
+  justify-self: end;
+  margin-top: 1.25rem;
+}
+@media (min-width: 768px) {
+  .arrows { align-self: center; margin-top: 0; }
+}
+
+/* ---------- Track: 1.2 cards on mobile, 2 on tablet, 3 on desktop ---------- */
+
+.track {
+  --gap: clamp(1rem, 2.5vw, 1.5rem);
+  --visible: 1.2;
+  --gaps: 1;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - var(--gaps) * var(--gap)) / var(--visible));
+  gap: var(--gap);
+  margin: calc(2rem - var(--lift-room)) calc(-1 * var(--bleed)) calc(-1 * var(--shadow-room));
+  padding: var(--lift-room) var(--bleed) var(--shadow-room);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--bleed);
+  /* The arrows and swipe replace the scrollbar, as in the reference. */
+  scrollbar-width: none;
+  border-radius: var(--radius-panel);
+}
+.track::-webkit-scrollbar { display: none; }
+.track:focus-visible {
+  outline: 2px solid var(--grape-text);
+  outline-offset: -2px;
+}
+@media (min-width: 640px) {
+  .track { --visible: 2; }
+}
+@media (min-width: 1024px) {
+  .track { --visible: 3; --gaps: 2; margin-top: calc(2.5rem - var(--lift-room)); }
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  display: flex;
+  scroll-snap-align: start;
+  border-radius: var(--radius-panel);
+  background: linear-gradient(150deg, var(--panel-raised), var(--panel-card) 60%);
+  border: 1px solid var(--grape-tint);
+  transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.card:nth-child(2) { --reveal-step: 1; }
+.card:nth-child(3) { --reveal-step: 2; }
+@media (hover: hover) {
+  /* Sized to fit inside --shadow-room and --bleed, so the scroller never clips it. */
+  .card:hover {
+    border-color: var(--grape-line);
+    box-shadow: 0 12px 28px -16px var(--grape-glow);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: translateY(-4px); }
+}
+
+/* A column, so every author row sits on the card's bottom edge whatever the quote length. */
+.figure {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.625rem;
+}
+
+/* The opening "66" quote mark, painted with the brand gradient through an SVG mask. */
+.mark {
+  width: 1.875rem;
+  height: 1.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(150deg, var(--grape-mid), var(--grape-dim));
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 24'%3E%3Cpath d='M0 18C0 10.5 4 4.5 11 1l1.5 2.6C8.6 6 6.6 8.6 6.2 12A6 6 0 1 1 0 18z'/%3E%3Cpath transform='translate(17 0)' d='M0 18C0 10.5 4 4.5 11 1l1.5 2.6C8.6 6 6.6 8.6 6.2 12A6 6 0 1 1 0 18z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.quote {
+  margin: 0 0 1.5rem;
+}
+.quote p {
+  margin: 0;
+  color: var(--fg);
+  font-size: 0.9375rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.author {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.75rem;
+}
+
+.avatar {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--grad-brand);
+  box-shadow: inset 0 0 0 1px var(--on-accent-line), 0 0 16px var(--grape-glow);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.name {
+  align-self: end;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.role {
+  align-self: start;
+  color: var(--fg-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
